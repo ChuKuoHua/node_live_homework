@@ -1,6 +1,6 @@
 const successHandle = require('../helpers/successHandle');
 const { errHandle } = require('../helpers/errHandle');
-const Post = require('../modals/posts'
+const Post = require('../models/posts'
 )
 
 const posts = {

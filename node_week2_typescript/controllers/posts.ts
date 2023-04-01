@@ -1,36 +1,36 @@
 import { ServerResponse, IncomingMessage } from "http";
 import successHandle from "../helpers/successHandle";
 import { errHandle } from "../helpers/errHandle";
-import {Post, IPost} from "../modals/posts";
+import Post, { IPost } from "../models/posts";
 
 const posts = {
   // 查詢資料
-  async getPosts({res, req}: {res: ServerResponse, req: IncomingMessage}) {
-    const data: IPost = await Post.find();
+  async getPosts(req: IncomingMessage, res:ServerResponse) {
+    const data: IPost[] = await Post.find();
     successHandle(res, data);
   },
   // 建立資料
-  async createPost({body, res, req}: {body: IPost, res: ServerResponse, req: IncomingMessage}) {
+  async createPost(req: IncomingMessage, res:ServerResponse, body: string) {
     try {
-      const data = body;
+      const data = <IPost>JSON.parse(body);
       const { name, tags, type, content, image } = data;
-      const newPost = await Post.create({
+      await Post.create({
         name,
         tags,
         type,
         content,
         image
       })
-      successHandle(res, newPost)
-    } catch (error: Error) {
-      console.log(error.errors);
-      errHandle(res, error.errors);
+      successHandle(res, "success")
+    } catch (error: unknown) {
+      console.log(error);
+      errHandle(res, '建立失敗');
     }
   },
   // 刪除單筆資料
-  async deleteOnePost ({body, res, req }: {body, res: ServerResponse, req: IncomingMessage}) {
+  async deleteOnePost (req: IncomingMessage, res:ServerResponse, body: string) {
     try {
-      const id = body.id;
+      const id = <IPost>JSON.parse(body).id;
       await Post.findByIdAndDelete(id)
       successHandle(res, 'success')
     } catch {
@@ -38,17 +38,17 @@ const posts = {
     }
   },
   // 刪除全部資料
-  async deleteAllPost ({res, req}: {res: ServerResponse, req: IncomingMessage}) {
-    const posts: Promise<Post> = await Post.deleteMany({});
-    successHandle(res, posts)
+  async deleteAllPost (req: IncomingMessage, res:ServerResponse,) {
+    await Post.deleteMany({});
+    successHandle(res, "success")
   },
   // 編輯資料
-  async editPost ({body, res: ServerResponse, req: IncomingMessage}) {
+  async editPost (req: IncomingMessage, res:ServerResponse, body: string) {
     try {
-      const data = body;
+      const data = <IPost>JSON.parse(body);;
       const { id, content, image, likes, comments } = data;
       if(data) {
-        const post = await Post.findByIdAndUpdate(id, {
+        await Post.findByIdAndUpdate(id, {
           $set: {
             content,
             image,
@@ -56,7 +56,7 @@ const posts = {
             comments
           }
         })
-        successHandle(res, post)
+        successHandle(res, "success")
       } else {
         errHandle(res, '欄位不正確')
       }

@@ -1,6 +1,6 @@
 const successHandle = require('../service/successHandle');
 const { errHandle } = require('../service/errHandle');
-const Post = require('../modals/posts'
+const Post = require('../models/posts'
 )
 
 const posts = {

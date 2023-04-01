@@ -1,35 +1,33 @@
 import { IncomingMessage, ServerResponse } from "http";
-import Http from '../controllers/http';
-import Posts from '../controllers/posts';
+import HttpControllers from '../controllers/http';
+import PostsHttpControllers from '../controllers/posts';
+
 const routes = async (req: IncomingMessage, res: ServerResponse) => {
   const { url, method } = req;
   let body = '';
-  req.on('data', chunk => {
+  req.on('data', (chunk: string) => {
     body += chunk;
   })
   if(url === "/posts" && method === "GET") {
-    Posts.getPosts({res, req});
+    PostsHttpControllers.getPosts(req, res);
   } else if (url === "/posts" && method === "POST") {
     req.on('end', () => {
-      body = JSON.parse(body);
-      Posts.createPost({ body, res, req });
+      PostsHttpControllers.createPost(req, res, body);
     });
   } else if (url === "/posts" && method === "DELETE") {
     req.on('end', () => {
-      body = JSON.parse(body);
-      Posts.deleteOnePost({ body, res, req });
+      PostsHttpControllers.deleteOnePost(req, res, body);
     });
   } else if (url === "/posts/all" && method === "DELETE") {
-    Posts.deleteAllPost({ res, req });
+    PostsHttpControllers.deleteAllPost(req, res);
   } else if (url === "/posts" && method === "PATCH") {
     req.on('end', () => {
-      body = JSON.parse(body);
-      Posts.editPost({ body, res, req });
+      PostsHttpControllers.editPost(req, res, body);
     });
   } else if (url === '/posts' && method === 'OPTIONS') {
-    Http.cors(res, req);
+    HttpControllers.cors(req, res);
   } else {
-    Http.notFound(res, req);
+    HttpControllers.notFound(req, res);
   }
 }
 
