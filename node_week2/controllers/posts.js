@@ -64,7 +64,7 @@ const posts = {
     } catch (err) {
       errHandle(res, '查無此 id');
     }
-  },
+  }
 }
 
 module.exports = posts;
