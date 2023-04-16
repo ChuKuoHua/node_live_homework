@@ -90,9 +90,9 @@ const user = {
   },
   // 取得個人資料
   async profile(req, res) {
-    const { id, username, role } = req.user
+    const { username, role } = req.user
     const data = {
-      id,
+      id: req.user.id,
       username,
       role
     }
