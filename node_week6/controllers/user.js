@@ -25,7 +25,7 @@ const user = {
     const user = await User.findOne(
       {
         email,
-        status: "0"
+        status: "0" // 0 啟用 1 停用
       },
     ).select('+password');
     if(!user) {
@@ -141,20 +141,6 @@ const user = {
     );
     generateSendJWT(user,200,res)
   },
-  // 會員停用/啟用
-  // async userUpdateStatus (req, res, next) {
-  //   let msg = ''
-  //   await User.findByIdAndUpdate(req.user.id, {
-  //     status: req.body.status
-  //   });
-
-  //   if(req.body.status === '1') {
-  //     msg = '會員已停用'
-  //   } else {
-  //     msg = '會員已啟用'
-  //   }
-  //   successHandle(res, msg)
-  // },
 }
 
 module.exports = user;

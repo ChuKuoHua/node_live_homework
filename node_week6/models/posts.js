@@ -16,11 +16,6 @@ const postSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    select: false
-  },
   content: {
     type: String,
     required: [true, 'Content 未填寫']
@@ -29,6 +24,11 @@ const postSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: [true, 'ID 未填寫'],
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    select: false
   }
 });
 
