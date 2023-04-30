@@ -159,7 +159,6 @@ const user = {
     if(!user) {
       return next(appError("400","無此會員信箱",next));
     }
-    // 請修改 15、16、21 行
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -186,8 +185,17 @@ const user = {
       <p>若您確定要重設密碼，請點擊以下連結：</p>
       <a
         href="http://127.0.0.1:3000/${token}"
-        
-      >127.0.0.1:3000/${token}</a>
+        style="
+          background-color: #111211;
+          border: none;
+          color: white;
+          padding: 10px 15px;
+          text-decoration: none;
+          cursor: pointer;
+          border-radius: 5px;
+          font-size: 14px;
+        "
+      >密碼重設</a>
       <p>此連結將會帶您前往密碼重設頁面。如果您未發出此請求，請忽略此郵件，您的密碼不會有任何更改。</p>
       <p>謝謝！</p>
       <p>musitix 活動主辦方</p>
