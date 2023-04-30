@@ -146,19 +146,20 @@ const user = {
   // 忘記密碼寄信
   async forgotPassword (req, res, next) {
     const { email } = req.body;
-    // 密碼 8 碼以上
     const user = await User.findOne(
       {
         email
       }
     );
 
-    const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{
-      expiresIn: '1d'
-    });
     if(!user) {
       return next(appError("400","無此會員信箱",next));
     }
+    
+    const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{
+      expiresIn: process.env.MAIL_EXPIRES_DAY
+    });
+    
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
