@@ -29,8 +29,7 @@ app.use((req: Request, res: Response, next: NextFunction) => res.status(404).sen
 }));
 
 // 錯誤處理
-// 錯誤處理
-app.use(function(err: IError, req: Request, res: Response, next: NextFunction) {
+app.use(function(err: IError, req: Request, res: Response) {
   // dev
   err.statusCode = err.statusCode || 500;
   if (process.env.NODE_ENV === 'dev') {
