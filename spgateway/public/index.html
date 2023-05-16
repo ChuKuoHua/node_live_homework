@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <ul>
+        <li>
+          <p>MerchantID： MS148916579</p>
+        </li>
+        <li>
+          <p>TradeSha： D7BAB6355B86533B42C8D7E41809720F2308B19392996ADE1F084A266DC2222F</p>
+        </li>
+        <li>
+          <p>TradeInfo：d8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944742ec8854f7d225dc08220c77a1964f0284ca94cd55586e070252dfca175ddf49f25c6d711aa20ac1ab38a1ad617427d35f5015ca9772b1420e4b19378b6ae15375e583010a5d07e363c8b77d4555409cb85613cae39f811507bbfc54830a1bae7affc2ed3640f4cb072839968786080</p>
+        </li>
+        <li>
+          <p>TimeStamp： 1684224973</p>
+        </li>
+        <li>
+          <p>Version： 1.5</p>
+        </li>
+        <li>
+          <p>MerchantOrderNo： 1684224973</p>
+        </li>
+        <li>
+          <p>Amt： 255</p>
+        </li>
+        <li>
+          <p>Email： 1@gmail.com</p>
+        </li>
+        <li>
+          <button
+            type="button"
+            @click="send()">送出</button>
+        </li>
+      </ul>
+      <form action="https://ccore.newebpay.com/MPG/mpg_gateway" method="post">
+        <input type="text" name="MerchantID" value="MS148916579" />
+        <input type="text" name="TradeSha"    value="D7BAB6355B86533B42C8D7E41809720F2308B19392996ADE1F084A266DC2222F" />
+        <input
+          type="text"
+          name="TradeInfo"
+          value="d8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944742ec8854f7d225dc08220c77a1964f0284ca94cd55586e070252dfca175ddf49f25c6d711aa20ac1ab38a1ad617427d35f5015ca9772b1420e4b19378b6ae15375e583010a5d07e363c8b77d4555409cb85613cae39f811507bbfc54830a1bae7affc2ed3640f4cb072839968786080"
+        />
+        <input type="text" name="TimeStamp" value="1684224973" />
+        <input type="text" name="Version" value="1.5" />
+        <input type="text" name="MerchantOrderNo" value="1684224973" />
+        <input type="text" name="Amt" value="255" />
+        <input type="email" name="Email" value="1@gmail.com" />
+        <button type="submit">送出</button>
+      </form>
+    </div>
+
+    <script type="module">
+      import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.37/vue.esm-browser.min.js';
+
+      const host = '<%= Host %>';
+      const app = {
+        data() {
+          return {
+            order: {
+              MerchantID: 'MS148916579',
+              Version: '1.5',
+              MerchantOrderNo: '1684223399',
+              Amt: '120',
+              Email: 'musitixmail@gmail.com',
+              ItemDesc: '1684223399',
+              TradeSha: 'D7BAB6355B86533B42C8D7E41809720F2308B19392996ADE1F084A266DC2222F',
+              TradeInfo: 'd8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944aa210b27e711cb6e043150c285de20bc4fb3e24c06c48b098c338e13b596cf95f686fb22bd4672b55937a8908087dac478f66f6cad4f58be020c84285318f045068d575b098da2e5851bfd7ce68514f1169203b9e3637813487dd78ebb85dd3d6e7eaf6b2a2047dc4aee55bcc46a198b'
+            },
+            orderId: '',
+          };
+        },
+        methods: {
+          send() {
+            const formData = {
+              MerchantID: this.order.MerchantID,
+              Version: this.order.Version,
+              MerchantOrderNo: this.order.MerchantOrderNo,
+              Amt: this.order.Amt,
+              Email: this.order.Email,
+              ItemDesc: this.order.ItemDesc,
+              TradeSha: this.order.TradeSha,
+              TradeInfo: this.order.TradeInfo
+            };
+            axios.post('https://ccore.newebpay.com/MPG/mpg_gateway', formData)
+              .then(res => {
+                console.log(res);
+              }).catch(error => {
+                console.log(error);
+              });
+          }
+        },
+        async mounted() {
+          // https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/URLSearchParams
+          const url = new URLSearchParams(window.location.search);
+          this.orderId = url.get('order');
+          const res = await axios.get(`${host}order/${this.orderId}`);
+          this.order = res.data;
+          console.log(this.order);
+        },
+      };
+
+      createApp(app).mount('#app');
+    </script>
+  </body>
+</html>
