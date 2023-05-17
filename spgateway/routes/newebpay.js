@@ -81,14 +81,13 @@ router.post('/sendData', async (req, res, next) => {
 // 交易成功：Return （可直接解密，將資料呈現在畫面上）
 router.post('/spgateway_return', function (req, res, next) {
   const response = req.body;
-  console.log('req.body return data', req.body);
-  // 解密交易內容
-  const data = create_mpg_aes_decrypt(response.TradeInfo);
-  console.log('data:', data);
-  res.json({
-    data
-  })
-  // res.redirect('https://musitix-south3.onrender.com/#/success');
+  const data = mpgAesDecrypt(response.TradeInfo);
+  console.log('Status:', data.Status);
+  if(data.Status === 'SUCCESS') {
+    res.redirect('https://musitix-south3.onrender.com/#/');
+  } else {
+    res.redirect('https://musitix-south3.onrender.com/#/');
+  }
 });
 
 // 確認交易：Notify
@@ -106,18 +105,18 @@ router.post('/spgateway_notify', function (req, res, next) {
   // 解密交易內容
   const data = create_mpg_aes_decrypt(response.TradeInfo);
   console.log('data:', data);
-
+  const orderId = data?.Result?.MerchantOrderNo
   // 取得交易內容，並查詢本地端資料庫是否有相符的訂單
-  if (!orders[data?.Result?.MerchantOrderNo]) {
+  if (!orderId) {
     console.log('找不到訂單');
     return res.end();
   }
 
   // 交易完成，將成功資訊儲存於資料庫
-  console.log('付款完成，訂單：', orders[data?.Result?.MerchantOrderNo]);
+  console.log('付款完成，訂單：', data?.Result?.MerchantOrderNo);
 
   res.json({
-    id: orders[data?.Result?.MerchantOrderNo]
+    id: data?.Result?.MerchantOrderNo
   })
 });
 
