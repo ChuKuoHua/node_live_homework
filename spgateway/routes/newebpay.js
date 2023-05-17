@@ -81,7 +81,7 @@ router.post('/sendData', async (req, res, next) => {
 // 交易成功：Return （可直接解密，將資料呈現在畫面上）
 router.post('/spgateway_return', function (req, res, next) {
   const response = req.body;
-  const data = mpgAesDecrypt(response.TradeInfo);
+  const data = create_mpg_sha_encrypt(response.TradeInfo);
   console.log('Status:', data.Status);
   if(data.Status === 'SUCCESS') {
     res.redirect('https://musitix-south3.onrender.com/#/');
