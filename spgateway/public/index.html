@@ -5,54 +5,127 @@
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
   </head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <body>
     <div id="app">
-      <ul>
-        <li>
-          <p>MerchantID： MS148916579</p>
-        </li>
-        <li>
-          <p>TradeSha： D7BAB6355B86533B42C8D7E41809720F2308B19392996ADE1F084A266DC2222F</p>
-        </li>
-        <li>
-          <p>TradeInfo：d8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944742ec8854f7d225dc08220c77a1964f0284ca94cd55586e070252dfca175ddf49f25c6d711aa20ac1ab38a1ad617427d35f5015ca9772b1420e4b19378b6ae15375e583010a5d07e363c8b77d4555409cb85613cae39f811507bbfc54830a1bae7affc2ed3640f4cb072839968786080</p>
-        </li>
-        <li>
-          <p>TimeStamp： 1684224973</p>
-        </li>
-        <li>
-          <p>Version： 1.5</p>
-        </li>
-        <li>
-          <p>MerchantOrderNo： 1684224973</p>
-        </li>
-        <li>
-          <p>Amt： 255</p>
-        </li>
-        <li>
-          <p>Email： 1@gmail.com</p>
-        </li>
-        <li>
-          <button
-            type="button"
-            @click="send()">送出</button>
-        </li>
-      </ul>
-      <form action="https://ccore.newebpay.com/MPG/mpg_gateway" method="post">
-        <input type="text" name="MerchantID" value="MS148916579" />
-        <input type="text" name="TradeSha"    value="D7BAB6355B86533B42C8D7E41809720F2308B19392996ADE1F084A266DC2222F" />
-        <input
-          type="text"
-          name="TradeInfo"
-          value="d8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944742ec8854f7d225dc08220c77a1964f0284ca94cd55586e070252dfca175ddf49f25c6d711aa20ac1ab38a1ad617427d35f5015ca9772b1420e4b19378b6ae15375e583010a5d07e363c8b77d4555409cb85613cae39f811507bbfc54830a1bae7affc2ed3640f4cb072839968786080"
-        />
-        <input type="text" name="TimeStamp" value="1684224973" />
-        <input type="text" name="Version" value="1.5" />
-        <input type="text" name="MerchantOrderNo" value="1684224973" />
-        <input type="text" name="Amt" value="255" />
-        <input type="email" name="Email" value="1@gmail.com" />
-        <button type="submit">送出</button>
-      </form>
+      <div class="row mb-3">
+        <ul class="col-6 list-group mb-3">
+          <li class="list-group-item">
+            <p>TimeStamp： 1684224973</p>
+          </li>
+          <li class="d-none list-group-item">
+            <p>MerchantID： MS148916579</p>
+          </li>
+          <li class="d-none list-group-item">
+            <p>TradeSha： D7BAB6355B86533B42C8D7E41809720F2308B19392996ADE1F084A266DC2222F</p>
+          </li>
+          <li class="d-none list-group-item">
+            <p class="text-break">TradeInfo：d8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944742ec8854f7d225dc08220c77a1964f0284ca94cd55586e070252dfca175ddf49f25c6d711aa20ac1ab38a1ad617427d35f5015ca9772b1420e4b19378b6ae15375e583010a5d07e363c8b77d4555409cb85613cae39f811507bbfc54830a1bae7affc2ed3640f4cb072839968786080</p>
+          </li>
+          <li class="d-none list-group-item">
+            <p>Version： 1.5</p>
+          </li>
+          <li class="list-group-item">
+            <p>MerchantOrderNo： 1684224973</p>
+          </li>
+          <li class="list-group-item">
+            <p>Amt： 255</p>
+          </li>
+          <li class="list-group-item">
+            <p>Email： 1@gmail.com</p>
+          </li>
+          <li class="list-group-item">
+            <button
+              class="btn btn-success"
+              type="button"
+              @click="send()">付款</button>
+          </li>
+        </ul>
+        <div class="col-6">
+          <form
+            action="https://ccore.newebpay.com/MPG/mpg_gateway"
+            method="post"
+          >
+            <div class="mb-3 input-group">
+              <span class="input-group-text">MerchantID</span>
+              <input
+                type="text"
+                class="form-control"
+                id="MerchantID"
+                name="MerchantID"
+                value="MS148916579">
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text">TradeSha</span>
+              <input
+                type="text"
+                class="form-control"
+                id="TradeSha" 
+                name="TradeSha"
+                value="AD28731B7A5741EA3B2BE86A31ED55EAD189E475717C481C09E029DD6363DE4A">
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text">TradeInfo</span>
+              <input
+                name="TradeInfo"
+                type="text"
+                class="form-control"
+                id="TradeInfo"
+                value="d8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944cb7177c16ad5c3dc4ecdc54db7569a5c785a6632e39f163b931afefbf9a513c8c87ce8b0984b39168962e94bf32c27dbba73c228f89b5805653de084f918a8907a17422a65d334cdccb585a0e8d1d224cd26647fc304870926be74d79786d97951f293d6dd84c970094c4267c1c7ab54">
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text">TimeStamp</span>
+              <input
+                type="text"
+                class="form-control"
+                id="TimeStamp"
+                name="TimeStamp"
+                value="1684224973">
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text">Version</span>
+              <input
+                type="text"
+                class="form-control"
+                id="Version"
+                value="1.5"
+                name="Version"
+              >
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text">MerchantOrderNo</span>
+              <input
+                type="text"
+                class="form-control"
+                id="MerchantOrderNo"
+                value="1684224973"
+                name="MerchantOrderNo"
+              >
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text">Amt</span>
+              <input
+                type="text"
+                class="form-control"
+                id="Amt"
+                value="255"
+                name="Amt"
+              >
+            </div>
+            <div class="mb-3 input-group">
+              <span class="input-group-text">Email</span>
+              <input
+                type="text"
+                class="form-control"
+                id="Email"
+                value="1@gmail.com"
+                name="Email"
+              >
+            </div>
+            <button class="btn bg-info" type="submit">送出</button>
+          </form>
+        </div>
+      </div>
     </div>
 
     <script type="module">
@@ -65,34 +138,53 @@
             order: {
               MerchantID: 'MS148916579',
               Version: '1.5',
-              MerchantOrderNo: '1684223399',
-              Amt: '120',
+              MerchantOrderNo: '1684224973',
+              Amt: '255',
               Email: 'musitixmail@gmail.com',
-              ItemDesc: '1684223399',
-              TradeSha: 'D7BAB6355B86533B42C8D7E41809720F2308B19392996ADE1F084A266DC2222F',
-              TradeInfo: 'd8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944aa210b27e711cb6e043150c285de20bc4fb3e24c06c48b098c338e13b596cf95f686fb22bd4672b55937a8908087dac478f66f6cad4f58be020c84285318f045068d575b098da2e5851bfd7ce68514f1169203b9e3637813487dd78ebb85dd3d6e7eaf6b2a2047dc4aee55bcc46a198b'
+              ItemDesc: '1684224973',
+              TradeSha: '383E499A8709C3905683C037ECC7CEAD7C4DF9A0131F842F60A9BB7C3C59D623',
+              TradeInfo: 'd8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944126480571e8e7568aa42112e1209fe606645e2319c7ceab97485451dc46ea556ca1e78d95437a2a3b6ee88e8a31512e9fdb861e129c254247a6db7fb920e3600ca0ed06b1770a361bd5973e4c23642df5c97b1f5ac609eafae591d151c6aab01c8ae66677730ebd8e93ba3909f588270'
             },
             orderId: '',
           };
         },
         methods: {
           send() {
-            const formData = {
-              MerchantID: this.order.MerchantID,
-              Version: this.order.Version,
-              MerchantOrderNo: this.order.MerchantOrderNo,
-              Amt: this.order.Amt,
-              Email: this.order.Email,
-              ItemDesc: this.order.ItemDesc,
-              TradeSha: this.order.TradeSha,
-              TradeInfo: this.order.TradeInfo
-            };
-            axios.post('https://ccore.newebpay.com/MPG/mpg_gateway', formData)
-              .then(res => {
-                console.log(res);
-              }).catch(error => {
-                console.log(error);
-              });
+            const formData = new FormData();
+            formData.append('MerchantID', this.order.MerchantID)
+            formData.append('Version', this.order.Version)
+            formData.append('MerchantOrderNo', this.order.MerchantOrderNo)
+            formData.append('Amt', this.order.Amt)
+            formData.append('Email', this.order.Email)
+            formData.append('ItemDesc', this.order.ItemDesc)
+            formData.append('TradeSha', this.order.TradeSha)
+            formData.append('TradeInfo', this.order.TradeInfo);
+
+            axios.post('https://ccore.newebpay.com/MPG/mpg_gateway', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }).then(v => {
+              console.log(v.data);
+              res.send(v.data)
+            })
+
+            // const formData = {
+            //   MerchantID: this.order.MerchantID,
+            //   Version: this.order.Version,
+            //   MerchantOrderNo: this.order.MerchantOrderNo,
+            //   Amt: this.order.Amt,
+            //   Email: this.order.Email,
+            //   ItemDesc: this.order.ItemDesc,
+            //   TradeSha: this.order.TradeSha,
+            //   TradeInfo: this.order.TradeInfo
+            // };
+            // axios.post('/api/sendData', formData)
+            //   .then(res => {
+            //     console.log(res);
+            //   }).catch(error => {
+            //     console.log(error);
+            //   });
           }
         },
         async mounted() {

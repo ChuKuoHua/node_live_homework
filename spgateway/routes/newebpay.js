@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const crypto = require('crypto');
-
+const FormData = require('form-data');
 const orders = {};
 
 const { MerchantID, HASHKEY, HASHIV, Version, Host } = process.env;
@@ -57,23 +57,38 @@ router.get('/order/:id', (req, res) => {
 // 確認訂單
 router.post('/sendData', async (req, res, next) => {
   const { MerchantOrderNo, Amt, Email, ItemDesc, TradeSha, TradeInfo} = req.body;
-  await axios.post('https://ccore.newebpay.com/MPG/mpg_gateway', {
-    MerchantID: process.env.MerchantID,
-    TradeSha: TradeSha,
-    TradeInfo: TradeInfo,
-    TimeStamp: ItemDesc,
-    Version: process.env.Version,
-    MerchantOrderNo: MerchantOrderNo,
-    Amt: Amt,
-    Email: Email
-  }).then(res => {
-    console.log(res);
+  const formData = new FormData();
+  formData.append('MerchantID', process.env.MerchantID)
+  formData.append('Version', process.env.Version)
+  formData.append('MerchantOrderNo', MerchantOrderNo)
+  formData.append('Amt', Amt)
+  formData.append('Email', Email)
+  formData.append('ItemDesc', ItemDesc)
+  formData.append('TradeSha', TradeSha)
+  formData.append('TradeInfo', TradeInfo);
+
+
+  await axios.post('https://ccore.newebpay.com/MPG/mpg_gateway', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }).then(v => {
+    console.log(v.data);
+    res.send(v.data)
   })
 });
 
 // 交易成功：Return （可直接解密，將資料呈現在畫面上）
 router.post('/spgateway_return', function (req, res, next) {
-  res.redirect('https://musitix-south3.onrender.com/#/success');
+  const response = req.body;
+  console.log('req.body return data', req.body);
+  // 解密交易內容
+  const data = create_mpg_aes_decrypt(response.TradeInfo);
+  console.log('data:', data);
+  res.json({
+    data
+  })
+  // res.redirect('https://musitix-south3.onrender.com/#/success');
 });
 
 // 確認交易：Notify
@@ -101,7 +116,9 @@ router.post('/spgateway_notify', function (req, res, next) {
   // 交易完成，將成功資訊儲存於資料庫
   console.log('付款完成，訂單：', orders[data?.Result?.MerchantOrderNo]);
 
-  return res.end();
+  res.json({
+    id: orders[data?.Result?.MerchantOrderNo]
+  })
 });
 
 module.exports = router;
