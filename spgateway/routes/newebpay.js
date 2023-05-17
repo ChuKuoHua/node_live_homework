@@ -1,81 +1,33 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
 const crypto = require('crypto');
-const FormData = require('form-data');
-const orders = {};
+const dotenv = require('dotenv');
+dotenv.config({path: './.env'});
 
-const { MerchantID, HASHKEY, HASHIV, Version, Host } = process.env;
-const RespondType = 'JSON';
-
+const { MerchantID, HASHKEY, HASHIV, Version, Host, RespondType } = process.env;
+const orders = {}
 // 建立訂單
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express', Host });
-});
 router.post('/createOrder', (req, res) => {
   const data = req.body;
-  console.log(data);
   const TimeStamp = Math.round(new Date().getTime() / 1000);
-  console.log(TimeStamp);
   orders[TimeStamp] = {
     ...data,
     TimeStamp,
     MerchantOrderNo: TimeStamp,
   };
-  console.log(orders[TimeStamp]);
 
-  return res.json(orders[TimeStamp]);
-});
-
-// 確認訂單
-router.get('/check', (req, res, next) => {
-  res.render('check', { title: 'Express', Host });
-});
-router.get('/order/:id', (req, res) => {
-  const { id } = req.params;
-  const order = orders[id];
-
-  // 用來產出字串
-  // const paramString = genDataChain(order);
-  // console.log('paramString:', paramString);
-
-  // 加密第一段字串，此段主要是提供交易內容給予藍新金流
+  const order = orders[TimeStamp]
+  
   const aesEncrypt = create_mpg_aes_encrypt(order);
   console.log('aesEncrypt:', aesEncrypt);
-
-  // 使用 HASH 再次 SHA 加密字串，作為驗證使用
   const shaEncrypt = create_mpg_sha_encrypt(aesEncrypt);
   console.log('shaEncrypt:', shaEncrypt);
 
-  res.json({
-    order,
-    aesEncrypt,
-    shaEncrypt,
+  return res.json({
+    order: orders[TimeStamp],
+    TradeSha: shaEncrypt,
+    TradeInfo: aesEncrypt,
   });
-});
-
-// 確認訂單
-router.post('/sendData', async (req, res, next) => {
-  const { MerchantOrderNo, Amt, Email, ItemDesc, TradeSha, TradeInfo} = req.body;
-  const formData = new FormData();
-  formData.append('MerchantID', process.env.MerchantID)
-  formData.append('Version', process.env.Version)
-  formData.append('MerchantOrderNo', MerchantOrderNo)
-  formData.append('Amt', Amt)
-  formData.append('Email', Email)
-  formData.append('ItemDesc', ItemDesc)
-  formData.append('TradeSha', TradeSha)
-  formData.append('TradeInfo', TradeInfo);
-
-
-  await axios.post('https://ccore.newebpay.com/MPG/mpg_gateway', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  }).then(v => {
-    console.log(v.data);
-    res.send(v.data)
-  })
 });
 
 // 交易成功：Return （可直接解密，將資料呈現在畫面上）
@@ -124,6 +76,7 @@ module.exports = router;
 
 // 字串組合
 function genDataChain(order) {
+  console.log(order);
   return `MerchantID=${MerchantID}&RespondType=${RespondType}&TimeStamp=${
     order.TimeStamp
   }&Version=${Version}&MerchantOrderNo=${order.MerchantOrderNo}&Amt=${
@@ -136,8 +89,10 @@ function genDataChain(order) {
 // 對應文件 P16：使用 aes 加密
 // $edata1=bin2hex(openssl_encrypt($data1, "AES-256-CBC", $key, OPENSSL_RAW_DATA, $iv));
 function create_mpg_aes_encrypt(TradeInfo) {
+  console.log(HASHKEY, HASHIV);
   const encrypt = crypto.createCipheriv('aes256', HASHKEY, HASHIV);
   const enc = encrypt.update(genDataChain(TradeInfo), 'utf8', 'hex');
+  
   return enc + encrypt.final('hex');
 }
 

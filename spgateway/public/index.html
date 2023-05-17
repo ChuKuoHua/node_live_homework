@@ -10,7 +10,30 @@
     <div id="app">
       <div class="row mb-1">
         <div class="col-6">
-          <p>Axios 打藍新 api</p>
+          <h1 class="h5">建立訂單</h1>
+          <form @submit.prevent="createOrder">
+            <div class="mb-1 input-group">
+              <span class="input-group-text">email</span>            <input class="form-control" type="email" v-model="addOrder.Email">
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text">價格</span>
+              <input class="form-control" type="number" v-model.number="addOrder.Amt">
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text">訂單資訊</span>
+              <input class="form-control" type="text" v-model="addOrder.ItemDesc">
+            </div>
+            <button class="btn btn-outline-warning" type="submit">送出</button>
+          </form>
+        </div>
+        <div class="col-6"></div>
+        <hr class="my-3">
+        <div class="col-12">
+          <h2 class="h5">藍新付款</h2>
+        </div>
+        <div class="col-6">
+          
+          <p>Axios 打藍新 api (會遇到 cors 跨域問題)</p>
           <ul class="list-group mb-1">
             <li class="list-group-item">
               
@@ -67,7 +90,7 @@
                 class="form-control"
                 id="TradeSha" 
                 name="TradeSha"
-                value="AD28731B7A5741EA3B2BE86A31ED55EAD189E475717C481C09E029DD6363DE4A">
+                v-model.number="order.TradeSha">
             </div>
             <div class="mb-1 input-group">
               <span class="input-group-text">TradeInfo</span>
@@ -76,7 +99,7 @@
                 type="text"
                 class="form-control"
                 id="TradeInfo"
-                value="d8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944cb7177c16ad5c3dc4ecdc54db7569a5c785a6632e39f163b931afefbf9a513c8c87ce8b0984b39168962e94bf32c27dbba73c228f89b5805653de084f918a8907a17422a65d334cdccb585a0e8d1d224cd26647fc304870926be74d79786d97951f293d6dd84c970094c4267c1c7ab54">
+                v-model.number="order.TradeInfo">
             </div>
             <div class="mb-1 input-group">
               <span class="input-group-text">TimeStamp</span>
@@ -85,7 +108,7 @@
                 class="form-control"
                 id="TimeStamp"
                 name="TimeStamp"
-                value="1684224973">
+                v-model.number="order.TimeStamp">
             </div>
             <div class="mb-1 input-group">
               <span class="input-group-text">Version</span>
@@ -103,7 +126,7 @@
                 type="text"
                 class="form-control"
                 id="MerchantOrderNo"
-                value="1684224973"
+                v-model.number="order.MerchantOrderNo"
                 name="MerchantOrderNo"
               >
             </div>
@@ -113,7 +136,7 @@
                 type="text"
                 class="form-control"
                 id="Amt"
-                value="255"
+                v-model.number="order.Amt"
                 name="Amt"
               >
             </div>
@@ -123,11 +146,11 @@
                 type="text"
                 class="form-control"
                 id="Email"
-                value="1@gmail.com"
+                v-model.number="order.Email"
                 name="Email"
               >
             </div>
-            <button class="btn btn-info w-50" type="submit">付款</button>
+            <button class="btn btn-success w-50" type="submit">付款</button>
           </form>
         </div>
       </div>
@@ -135,25 +158,39 @@
 
     <script type="module">
       import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.37/vue.esm-browser.min.js';
-
-      const host = '<%= Host %>';
       const app = {
         data() {
           return {
+            addOrder: {
+              Email: '',
+              Amt: 1200,
+              ItemDesc: '大港音樂祭'
+            },
             order: {
-              MerchantID: 'MS148916579',
-              Version: '1.5',
-              MerchantOrderNo: '1684224973',
-              Amt: '255',
-              Email: 'musitixmail@gmail.com',
-              ItemDesc: '1684224973',
-              TradeSha: '383E499A8709C3905683C037ECC7CEAD7C4DF9A0131F842F60A9BB7C3C59D623',
-              TradeInfo: 'd8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944126480571e8e7568aa42112e1209fe606645e2319c7ceab97485451dc46ea556ca1e78d95437a2a3b6ee88e8a31512e9fdb861e129c254247a6db7fb920e3600ca0ed06b1770a361bd5973e4c23642df5c97b1f5ac609eafae591d151c6aab01c8ae66677730ebd8e93ba3909f588270'
+              MerchantOrderNo: '',
+              Amt: '',
+              Email: '',
+              ItemDesc: '',
+              TradeSha: '',
+              TradeInfo: '',
+              TimeStamp: '',
             },
             orderId: '',
           };
         },
         methods: {
+          async createOrder() {
+            const url = '/api/createOrder';
+            const res = await axios.post(url, this.addOrder).then(res => {
+              const data = res.data
+              for(let key in this.order) {
+                this.order[key] = data.order[key]
+              }
+              console.log(data);
+              this.order['TradeSha'] = data['TradeSha']
+              this.order['TradeInfo'] = data['TradeInfo']
+            });
+          },
           send() {
             const formData = new FormData();
             formData.append('MerchantID', this.order.MerchantID)
