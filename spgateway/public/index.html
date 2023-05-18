@@ -13,7 +13,12 @@
           <h1 class="h5">建立訂單</h1>
           <form @submit.prevent="createOrder">
             <div class="mb-1 input-group">
-              <span class="input-group-text">email</span>            <input class="form-control" type="email" v-model="addOrder.Email">
+              <span class="input-group-text">訂單編號</span>
+              <input class="form-control" type="text" v-model=addOrder.MerchantOrderNo readonly>
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text">email</span>
+              <input class="form-control" type="email" v-model="addOrder.Email">
             </div>
             <div class="mb-1 input-group">
               <span class="input-group-text">價格</span>
@@ -32,11 +37,9 @@
           <h2 class="h5">藍新付款</h2>
         </div>
         <div class="col-6">
-          
           <p>Axios 打藍新 api (會遇到 cors 跨域問題)</p>
           <ul class="list-group mb-1">
             <li class="list-group-item">
-              
               <p>TimeStamp： 1684224973</p>
             </li>
             <li class="d-none list-group-item">
@@ -75,79 +78,89 @@
             method="post"
           >
             <div class="mb-1 input-group">
-              <span class="input-group-text">MerchantID</span>
+              <span class="input-group-text border-0 bg-light">MerchantID (商店代號)</span>
               <input
                 type="text"
-                class="form-control"
+                class="form-control border-0"
                 id="MerchantID"
                 name="MerchantID"
-                value="MS148916579">
+                value="MS148916579"
+                readonly
+              >
             </div>
             <div class="mb-1 input-group">
-              <span class="input-group-text">TradeSha</span>
+              <span class="input-group-text border-0 bg-light">TradeSha</span>
               <input
                 type="text"
-                class="form-control"
+                class="form-control border-0"
                 id="TradeSha" 
                 name="TradeSha"
-                v-model.number="order.TradeSha">
+                v-model.number="order.TradeSha"
+                readonly
+              >
             </div>
             <div class="mb-1 input-group">
-              <span class="input-group-text">TradeInfo</span>
+              <span class="input-group-text border-0 bg-light">TradeInfo</span>
               <input
                 name="TradeInfo"
                 type="text"
-                class="form-control"
+                class="form-control border-0"
                 id="TradeInfo"
-                v-model.number="order.TradeInfo">
+                v-model.number="order.TradeInfo"
+                readonly>
             </div>
             <div class="mb-1 input-group">
-              <span class="input-group-text">TimeStamp</span>
+              <span class="input-group-text border-0 bg-light">TimeStamp (時間戳)</span>
               <input
                 type="text"
-                class="form-control"
+                class="form-control border-0"
                 id="TimeStamp"
                 name="TimeStamp"
-                v-model.number="order.TimeStamp">
+                v-model.number="order.TimeStamp"
+                readonly>
             </div>
             <div class="mb-1 input-group">
-              <span class="input-group-text">Version</span>
+              <span class="input-group-text border-0 bg-light">Version (版本)</span>
               <input
                 type="text"
-                class="form-control"
+                class="form-control border-0"
                 id="Version"
                 value="1.5"
                 name="Version"
+                readonly
               >
             </div>
             <div class="mb-1 input-group">
-              <span class="input-group-text">MerchantOrderNo</span>
+              <span class="input-group-text border-0 bg-light">MerchantOrderNo (訂單編號)</span>
               <input
                 type="text"
-                class="form-control"
+                class="form-control border-0"
                 id="MerchantOrderNo"
                 v-model.number="order.MerchantOrderNo"
                 name="MerchantOrderNo"
+                readonly
               >
             </div>
             <div class="mb-1 input-group">
-              <span class="input-group-text">Amt</span>
+              <span class="input-group-text border-0 bg-light">Amt (金額)</span>
               <input
                 type="text"
-                class="form-control"
+                class="form-control border-0"
                 id="Amt"
                 v-model.number="order.Amt"
                 name="Amt"
+                readonly
               >
             </div>
             <div class="mb-1 input-group">
-              <span class="input-group-text">Email</span>
+              <span class="input-group-text border-0 bg-light">Email</span>
               <input
                 type="text"
-                class="form-control"
+                class="form-control border-0"
                 id="Email"
                 v-model.number="order.Email"
                 name="Email"
+                readonly
               >
             </div>
             <button class="btn btn-success w-50" type="submit">付款</button>
@@ -162,6 +175,7 @@
         data() {
           return {
             addOrder: {
+              MerchantOrderNo: Math.round(new Date().getTime() / 1000),
               Email: '',
               Amt: 1200,
               ItemDesc: '大港音樂祭'
@@ -175,7 +189,6 @@
               TradeInfo: '',
               TimeStamp: '',
             },
-            orderId: '',
           };
         },
         methods: {
@@ -230,12 +243,6 @@
           }
         },
         async mounted() {
-          // https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/URLSearchParams
-          const url = new URLSearchParams(window.location.search);
-          this.orderId = url.get('order');
-          const res = await axios.get(`${host}order/${this.orderId}`);
-          this.order = res.data;
-          console.log(this.order);
         },
       };
 

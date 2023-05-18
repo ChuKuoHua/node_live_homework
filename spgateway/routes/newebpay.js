@@ -9,22 +9,20 @@ const orders = {}
 // 建立訂單
 router.post('/createOrder', (req, res) => {
   const data = req.body;
-  const TimeStamp = Math.round(new Date().getTime() / 1000);
-  orders[TimeStamp] = {
+  const TimeStamp = Math.round(new Date().getTime() / 1000)
+  orders[data.MerchantOrderNo] = {
     ...data,
     TimeStamp,
-    MerchantOrderNo: TimeStamp,
   };
-
-  const order = orders[TimeStamp]
+  const order = orders[data.MerchantOrderNo]
   
   const aesEncrypt = create_mpg_aes_encrypt(order);
-  console.log('aesEncrypt:', aesEncrypt);
+  // console.log('aesEncrypt:', aesEncrypt);
   const shaEncrypt = create_mpg_sha_encrypt(aesEncrypt);
-  console.log('shaEncrypt:', shaEncrypt);
+  // console.log('shaEncrypt:', shaEncrypt);
 
   return res.json({
-    order: orders[TimeStamp],
+    order: orders[data.MerchantOrderNo],
     TradeSha: shaEncrypt,
     TradeInfo: aesEncrypt,
   });
