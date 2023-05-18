@@ -32,7 +32,7 @@ router.post('/createOrder', (req, res) => {
 router.post('/spgateway_return', function (req, res, next) {
   const response = req.body;
   const data = create_mpg_sha_encrypt(response.TradeInfo);
-  console.log('Status:', data.Status);
+  console.log(response);
   if(data.Status === 'SUCCESS') {
     res.redirect('https://musitix-south3.onrender.com/#/');
   } else {
@@ -74,7 +74,6 @@ module.exports = router;
 
 // 字串組合
 function genDataChain(order) {
-  console.log(order);
   return `MerchantID=${MerchantID}&RespondType=${RespondType}&TimeStamp=${
     order.TimeStamp
   }&Version=${Version}&MerchantOrderNo=${order.MerchantOrderNo}&Amt=${
@@ -87,7 +86,6 @@ function genDataChain(order) {
 // 對應文件 P16：使用 aes 加密
 // $edata1=bin2hex(openssl_encrypt($data1, "AES-256-CBC", $key, OPENSSL_RAW_DATA, $iv));
 function create_mpg_aes_encrypt(TradeInfo) {
-  console.log(HASHKEY, HASHIV);
   const encrypt = crypto.createCipheriv('aes256', HASHKEY, HASHIV);
   const enc = encrypt.update(genDataChain(TradeInfo), 'utf8', 'hex');
   
