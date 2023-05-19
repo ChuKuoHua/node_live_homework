@@ -4,18 +4,22 @@ const crypto = require('crypto');
 const dotenv = require('dotenv');
 dotenv.config({path: './.env'});
 
-const { MerchantID, HASHKEY, HASHIV, Version, Host, RespondType } = process.env;
+const { MerchantID, HASHKEY, HASHIV, Version, Host, RespondType, ReturnURL, NotifyURL, ClientBackURL } = process.env;
 const orders = {}
 // 建立訂單
 router.post('/createOrder', (req, res) => {
   const data = req.body;
   const TimeStamp = Math.round(new Date().getTime() / 1000)
+  const ExpireDate = '2023-05-25'
+
   orders[data.MerchantOrderNo] = {
     ...data,
     TimeStamp,
+    ExpireDate
   };
   const order = orders[data.MerchantOrderNo]
   
+  console.log(order);
   const aesEncrypt = create_mpg_aes_encrypt(order);
   // console.log('aesEncrypt:', aesEncrypt);
   const shaEncrypt = create_mpg_sha_encrypt(aesEncrypt);
@@ -32,7 +36,6 @@ router.post('/createOrder', (req, res) => {
 router.post('/spgateway_return', function (req, res, next) {
   const response = req.body;
   const data = create_mpg_sha_encrypt(response.TradeInfo);
-  console.log(response);
   if(data.Status === 'SUCCESS') {
     res.redirect('https://musitix-south3.onrender.com/#/');
   } else {
@@ -74,13 +77,20 @@ module.exports = router;
 
 // 字串組合
 function genDataChain(order) {
-  return `MerchantID=${MerchantID}&RespondType=${RespondType}&TimeStamp=${
-    order.TimeStamp
-  }&Version=${Version}&MerchantOrderNo=${order.MerchantOrderNo}&Amt=${
-    order.Amt
-  }&ItemDesc=${encodeURIComponent(order.ItemDesc)}&Email=${encodeURIComponent(
-    order.Email,
-  )}`;
+  const ExpireDate = order?.ExpireDate
+
+  return `MerchantID=${MerchantID}`
+    + `&RespondType=${RespondType}`
+    + `&TimeStamp=${order.TimeStamp}`
+    + `&Version=${Version}`
+    + `&MerchantOrderNo=${order.MerchantOrderNo}`
+    + `&Amt=${order.Amt}`
+    + `&ItemDesc=${encodeURIComponent(order.ItemDesc)}`
+    + `&Email=${encodeURIComponent(order.Email)}`
+    + `&NotifyURL=${NotifyURL}`
+    + `&ReturnURL=${ReturnURL}`
+    + `&ClientBackURL=${ClientBackURL}`
+    + `&ExpireDate=${ExpireDate ? ExpireDate : ''}`;
 }
 
 // 對應文件 P16：使用 aes 加密

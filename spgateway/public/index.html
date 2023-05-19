@@ -38,7 +38,7 @@
         </div>
         <div class="col-6">
           <p>Axios 打藍新 api (會遇到 cors 跨域問題)</p>
-          <ul class="list-group mb-1">
+          <!-- <ul class="list-group mb-1">
             <li class="list-group-item">
               <p>TimeStamp： 1684224973</p>
             </li>
@@ -69,7 +69,118 @@
                 type="button"
                 @click="send()">付款</button>
             </li>
-          </ul>
+          </ul> -->
+          <form @submit.prevent="send">
+            <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">MerchantID (商店代號)</span>
+              <input
+                type="text"
+                class="form-control border-0"
+                id="MerchantID"
+                name="MerchantID"
+                value="MS148916579"
+                readonly
+              >
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">TradeSha</span>
+              <input
+                type="text"
+                class="form-control border-0"
+                id="TradeSha" 
+                name="TradeSha"
+                v-model.number="order.TradeSha"
+                readonly
+              >
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">TradeInfo</span>
+              <input
+                name="TradeInfo"
+                type="text"
+                class="form-control border-0"
+                id="TradeInfo"
+                v-model.number="order.TradeInfo"
+                readonly>
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">TimeStamp (時間戳)</span>
+              <input
+                type="text"
+                class="form-control border-0"
+                id="TimeStamp"
+                name="TimeStamp"
+                v-model.number="order.TimeStamp"
+                readonly>
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">Version (版本)</span>
+              <input
+                type="text"
+                class="form-control border-0"
+                id="Version"
+                value="1.5"
+                name="Version"
+                readonly
+              >
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">MerchantOrderNo (訂單編號)</span>
+              <input
+                type="text"
+                class="form-control border-0"
+                id="MerchantOrderNo"
+                v-model.number="order.MerchantOrderNo"
+                name="MerchantOrderNo"
+                readonly
+              >
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">ItemDesc(訂單資訊)</span>
+              <input
+                type="text"
+                class="form-control border-0"
+                id="ItemDesc" 
+                name="ItemDesc"
+                v-model.number="order.ItemDesc"
+                readonly
+              >
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">Amt (金額)</span>
+              <input
+                type="text"
+                class="form-control border-0"
+                id="Amt"
+                v-model.number="order.Amt"
+                name="Amt"
+                readonly
+              >
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">Email</span>
+              <input
+                type="text"
+                class="form-control border-0"
+                id="Email"
+                v-model.number="order.Email"
+                name="Email"
+                readonly
+              >
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">ExpireDate</span>
+              <input
+                type="date"
+                class="form-control border-0"
+                id="ExpireDate"
+                name="ExpireDate"
+                v-model="order.ExpireDate"
+                readonly
+              >
+            </div>
+            <button class="btn btn-success w-50" type="submit">付款</button>
+          </form>
         </div>
         <div class="col-6">
           <p>Form 打藍新 api</p>
@@ -142,6 +253,17 @@
               >
             </div>
             <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">ItemDesc(訂單資訊)</span>
+              <input
+                type="text"
+                class="form-control border-0"
+                id="ItemDesc" 
+                name="ItemDesc"
+                v-model.number="order.ItemDesc"
+                readonly
+              >
+            </div>
+            <div class="mb-1 input-group">
               <span class="input-group-text border-0 bg-light">Amt (金額)</span>
               <input
                 type="text"
@@ -160,6 +282,17 @@
                 id="Email"
                 v-model.number="order.Email"
                 name="Email"
+                readonly
+              >
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text border-0 bg-light">ExpireDate</span>
+              <input
+                type="date"
+                class="form-control border-0"
+                id="ExpireDate"
+                name="ExpireDate"
+                v-model="order.ExpireDate"
                 readonly
               >
             </div>
@@ -188,6 +321,8 @@
               TradeSha: '',
               TradeInfo: '',
               TimeStamp: '',
+              ItemDesc: '',
+              ExpireDate: ''
             },
           };
         },
