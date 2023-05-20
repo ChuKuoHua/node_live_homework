@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
 const dotenv = require('dotenv');
-const moment = require('moment');
+const dayjs = require('dayjs');
 dotenv.config({path: './.env'});
 
 const { MerchantID, HASHKEY, HASHIV, Version, Host, RespondType, ReturnURL, NotifyURL, ClientBackURL } = process.env;
@@ -32,15 +32,15 @@ router.post('/createOrder', (req, res) => {
   const outputFormat2 = 'YYYY-MM-DD HH:mm:ss';
 
   // 將日期字串轉換為指定格式的日期物件
-  const dateObj = moment(dateStr, inputFormat);
+  const dateObj = dayjs(dateStr, inputFormat);
 
   // 將日期物件轉換為指定格式的字串
   const formattedDate = dateObj.format(outputFormat);
-  // console.log(formattedDate)
-  const dateObj2 = moment(formattedDate, outputFormat);
+  console.log(formattedDate)
+  const dateObj2 = dayjs(formattedDate, outputFormat);
   const formattedDate2 = dateObj2.format(outputFormat2);
   
-  // console.log(formattedDate2);
+  console.log(formattedDate2);
 
   return res.json({
     order: orders[data.MerchantOrderNo],
