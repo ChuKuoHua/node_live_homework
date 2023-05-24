@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const crypto = require('crypto');
 const dotenv = require('dotenv');
+const dayjs = require('dayjs');
 dotenv.config({path: './.env'});
 
 const { MerchantID, HASHKEY, HASHIV, Version, Host, RespondType, ReturnURL, NotifyURL, ClientBackURL } = process.env;
@@ -24,6 +25,22 @@ router.post('/createOrder', (req, res) => {
   // console.log('aesEncrypt:', aesEncrypt);
   const shaEncrypt = create_mpg_sha_encrypt(aesEncrypt);
   // console.log('shaEncrypt:', shaEncrypt);
+  const dateStr = '2023-05-2010:23:04';
+  const inputFormat = 'YYYY-MM-DDTHH:mm:ss';
+  const outputFormat = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
+
+  const outputFormat2 = 'YYYY-MM-DD HH:mm:ss';
+
+  // 將日期字串轉換為指定格式的日期物件
+  const dateObj = dayjs(dateStr, inputFormat);
+
+  // 將日期物件轉換為指定格式的字串
+  const formattedDate = dateObj.format(outputFormat);
+  console.log(formattedDate)
+  const dateObj2 = dayjs(formattedDate, outputFormat);
+  const formattedDate2 = dateObj2.format(outputFormat2);
+  
+  console.log(formattedDate2);
 
   return res.json({
     order: orders[data.MerchantOrderNo],
@@ -35,8 +52,8 @@ router.post('/createOrder', (req, res) => {
 // 交易成功：Return （可直接解密，將資料呈現在畫面上）
 router.post('/spgateway_return', function (req, res, next) {
   const response = req.body;
-  const data = create_mpg_sha_encrypt(response.TradeInfo);
-  if(data.Status === 'SUCCESS') {
+  // const data = create_mpg_sha_encrypt(response.TradeInfo);
+  if(response.Status === 'SUCCESS') {
     res.redirect('https://musitix-south3.onrender.com/#/');
   } else {
     res.redirect('https://musitix-south3.onrender.com/#/');
@@ -88,7 +105,7 @@ function genDataChain(order) {
     + `&ItemDesc=${encodeURIComponent(order.ItemDesc)}`
     + `&Email=${encodeURIComponent(order.Email)}`
     + `&NotifyURL=${NotifyURL}`
-    + `&ReturnURL=${ReturnURL}`
+    // + `&ReturnURL=${ReturnURL}`
     + `&ClientBackURL=${ClientBackURL}`
     + `&ExpireDate=${ExpireDate ? ExpireDate : ''}`;
 }
