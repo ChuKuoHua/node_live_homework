@@ -9,7 +9,7 @@
   <body>
     <div id="app">
       <div class="row mb-1">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
           <h1 class="h5">建立訂單</h1>
           <form @submit.prevent="createOrder">
             <div class="mb-1 input-group">
@@ -31,159 +31,8 @@
             <button class="btn btn-outline-warning" type="submit">送出</button>
           </form>
         </div>
-        <div class="col-6"></div>
-        <hr class="my-3">
-        <div class="col-12">
+        <div class="col-12 col-md-6">
           <h2 class="h5">藍新付款</h2>
-        </div>
-        <div class="col-6">
-          <p>Axios 打藍新 api (會遇到 cors 跨域問題)</p>
-          <!-- <ul class="list-group mb-1">
-            <li class="list-group-item">
-              <p>TimeStamp： 1684224973</p>
-            </li>
-            <li class="d-none list-group-item">
-              <p>MerchantID： MS148916579</p>
-            </li>
-            <li class="d-none list-group-item">
-              <p>TradeSha： D7BAB6355B86533B42C8D7E41809720F2308B19392996ADE1F084A266DC2222F</p>
-            </li>
-            <li class="d-none list-group-item">
-              <p class="text-break">TradeInfo：d8f663697c387ba25324ba3f6434f2e46f1291d6e3c1dc6611c185ebc1ffb7afebc7e7b7bb70c8220e4e93536a04d944742ec8854f7d225dc08220c77a1964f0284ca94cd55586e070252dfca175ddf49f25c6d711aa20ac1ab38a1ad617427d35f5015ca9772b1420e4b19378b6ae15375e583010a5d07e363c8b77d4555409cb85613cae39f811507bbfc54830a1bae7affc2ed3640f4cb072839968786080</p>
-            </li>
-            <li class="d-none list-group-item">
-              <p>Version： 1.5</p>
-            </li>
-            <li class="list-group-item">
-              <p>MerchantOrderNo： 1684224973</p>
-            </li>
-            <li class="list-group-item">
-              <p>Amt： 255</p>
-            </li>
-            <li class="list-group-item">
-              <p>Email： 1@gmail.com</p>
-            </li>
-            <li class="list-group-item">
-              <button
-                class="btn btn-success w-50"
-                type="button"
-                @click="send()">付款</button>
-            </li>
-          </ul> -->
-          <form @submit.prevent="send">
-            <div class="mb-1 input-group">
-              <span class="input-group-text border-0 bg-light">MerchantID (商店代號)</span>
-              <input
-                type="text"
-                class="form-control border-0"
-                id="MerchantID"
-                name="MerchantID"
-                value="MS148916579"
-                readonly
-              >
-            </div>
-            <div class="mb-1 input-group">
-              <span class="input-group-text border-0 bg-light">TradeSha</span>
-              <input
-                type="text"
-                class="form-control border-0"
-                id="TradeSha" 
-                name="TradeSha"
-                v-model.number="order.TradeSha"
-                readonly
-              >
-            </div>
-            <div class="mb-1 input-group">
-              <span class="input-group-text border-0 bg-light">TradeInfo</span>
-              <input
-                name="TradeInfo"
-                type="text"
-                class="form-control border-0"
-                id="TradeInfo"
-                v-model.number="order.TradeInfo"
-                readonly>
-            </div>
-            <div class="mb-1 input-group">
-              <span class="input-group-text border-0 bg-light">TimeStamp (時間戳)</span>
-              <input
-                type="text"
-                class="form-control border-0"
-                id="TimeStamp"
-                name="TimeStamp"
-                v-model.number="order.TimeStamp"
-                readonly>
-            </div>
-            <div class="mb-1 input-group">
-              <span class="input-group-text border-0 bg-light">Version (版本)</span>
-              <input
-                type="text"
-                class="form-control border-0"
-                id="Version"
-                value="1.5"
-                name="Version"
-                readonly
-              >
-            </div>
-            <div class="mb-1 input-group">
-              <span class="input-group-text border-0 bg-light">MerchantOrderNo (訂單編號)</span>
-              <input
-                type="text"
-                class="form-control border-0"
-                id="MerchantOrderNo"
-                v-model.number="order.MerchantOrderNo"
-                name="MerchantOrderNo"
-                readonly
-              >
-            </div>
-            <div class="mb-1 input-group">
-              <span class="input-group-text border-0 bg-light">ItemDesc(訂單資訊)</span>
-              <input
-                type="text"
-                class="form-control border-0"
-                id="ItemDesc" 
-                name="ItemDesc"
-                v-model.number="order.ItemDesc"
-                readonly
-              >
-            </div>
-            <div class="mb-1 input-group">
-              <span class="input-group-text border-0 bg-light">Amt (金額)</span>
-              <input
-                type="text"
-                class="form-control border-0"
-                id="Amt"
-                v-model.number="order.Amt"
-                name="Amt"
-                readonly
-              >
-            </div>
-            <div class="mb-1 input-group">
-              <span class="input-group-text border-0 bg-light">Email</span>
-              <input
-                type="text"
-                class="form-control border-0"
-                id="Email"
-                v-model.number="order.Email"
-                name="Email"
-                readonly
-              >
-            </div>
-            <div class="mb-1 input-group">
-              <span class="input-group-text border-0 bg-light">ExpireDate</span>
-              <input
-                type="date"
-                class="form-control border-0"
-                id="ExpireDate"
-                name="ExpireDate"
-                v-model="order.ExpireDate"
-                readonly
-              >
-            </div>
-            <button class="btn btn-success w-50" type="submit">付款</button>
-          </form>
-        </div>
-        <div class="col-6">
-          <p>Form 打藍新 api</p>
           <form
             action="https://ccore.newebpay.com/MPG/mpg_gateway"
             method="post"
@@ -299,6 +148,50 @@
             <button class="btn btn-success w-50" type="submit">付款</button>
           </form>
         </div>
+        <div class="col-12 col-md-6">
+          <h1 class="h5">訂單退款</h1>
+          <form @submit.prevent="closeOrder">
+            <div class="mb-1 input-group">
+              <span class="input-group-text">藍新金流交易序號</span>
+              <input class="form-control" type="text" v-model=closeOrderInfo.TradeNo>
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text">訂單編號</span>
+              <input class="form-control" type="text" v-model=closeOrderInfo.MerchantOrderNo>
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text">退款金額</span>
+              <input class="form-control" type="number" v-model.number="closeOrderInfo.Amt">
+            </div>
+            <button class="btn btn-outline-warning" type="submit">送出</button>
+          </form>
+        </div>
+        <div class="col-12 col-md-6">
+          <h1 class="h5">訂單退款</h1>
+          <form
+            action="https://ccore.newebpay.com/API/CreditCard/Close"
+            method="post"
+          >
+            <div class="mb-1 input-group">
+              <span class="input-group-text">訂單編號</span>
+              <input
+                class="form-control"
+                type="text"
+                v-model=closeOrderInfo.MerchantOrderNo readonly
+                name="MerchantID_"
+              >
+            </div>
+            <div class="mb-1 input-group">
+              <span class="input-group-text">退款金額</span>
+              <input class="form-control"
+                type="text"
+                v-model="closeOrderInfo.PostData_"
+                name="PostData_"
+              >
+            </div>
+            <button class="btn btn-outline-warning" type="submit">送出</button>
+          </form>
+        </div>
       </div>
     </div>
 
@@ -313,6 +206,12 @@
               Amt: 1200,
               ItemDesc: '大港音樂祭'
             },
+            closeOrderInfo: {
+              MerchantOrderNo: '',
+              Amt: 0,
+              TradeNo: ''
+            },
+            PostData_: '',
             order: {
               MerchantOrderNo: '',
               Amt: '',
@@ -334,48 +233,20 @@
               for(let key in this.order) {
                 this.order[key] = data.order[key]
               }
-              console.log(data);
               this.order['TradeSha'] = data['TradeSha']
               this.order['TradeInfo'] = data['TradeInfo']
             });
           },
-          send() {
-            const formData = new FormData();
-            formData.append('MerchantID', this.order.MerchantID)
-            formData.append('Version', this.order.Version)
-            formData.append('MerchantOrderNo', this.order.MerchantOrderNo)
-            formData.append('Amt', this.order.Amt)
-            formData.append('Email', this.order.Email)
-            formData.append('ItemDesc', this.order.ItemDesc)
-            formData.append('TradeSha', this.order.TradeSha)
-            formData.append('TradeInfo', this.order.TradeInfo);
-
-            axios.post('https://ccore.newebpay.com/MPG/mpg_gateway', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data'
+          async closeOrder() {
+            const url = '/api/closeOrder';
+            const res = await axios.post(url, this.closeOrderInfo).then(res => {
+              const data = res.data
+              for(let key in this.closeOrderInfo) {
+                this.closeOrderInfo[key] = data.order[key]
               }
-            }).then(v => {
-              console.log(v.data);
-              res.send(v.data)
-            })
-
-            // const formData = {
-            //   MerchantID: this.order.MerchantID,
-            //   Version: this.order.Version,
-            //   MerchantOrderNo: this.order.MerchantOrderNo,
-            //   Amt: this.order.Amt,
-            //   Email: this.order.Email,
-            //   ItemDesc: this.order.ItemDesc,
-            //   TradeSha: this.order.TradeSha,
-            //   TradeInfo: this.order.TradeInfo
-            // };
-            // axios.post('/api/sendData', formData)
-            //   .then(res => {
-            //     console.log(res);
-            //   }).catch(error => {
-            //     console.log(error);
-            //   });
-          }
+              this.closeOrderInfo['PostData_'] = data.PostData_
+            });
+          },
         },
         async mounted() {
         },

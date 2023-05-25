@@ -21,7 +21,7 @@ router.post('/createOrder', (req, res) => {
   const order = orders[data.MerchantOrderNo]
   
   console.log(order);
-  const aesEncrypt = create_mpg_aes_encrypt(order);
+  const aesEncrypt = create_mpg_aes_encrypt(order, 'create');
   // console.log('aesEncrypt:', aesEncrypt);
   const shaEncrypt = create_mpg_sha_encrypt(aesEncrypt);
   // console.log('shaEncrypt:', shaEncrypt);
@@ -90,32 +90,59 @@ router.post('/spgateway_notify', function (req, res, next) {
   })
 });
 
+router.post('/closeOrder', (req, res) => {
+  const data = req.body;
+  const TimeStamp = Math.round(new Date().getTime() / 1000)
+  orders[data.MerchantOrderNo] = {
+    ...data,
+    TimeStamp
+  };
+  const order = orders[data.MerchantOrderNo]
+  const aesEncrypt = create_mpg_aes_encrypt(order, 'close');
+
+  return res.json({
+    order: orders[data.MerchantOrderNo],
+    PostData_: aesEncrypt,
+  });
+});
+
 module.exports = router;
 
 // 字串組合
-function genDataChain(order) {
+function genDataChain(order, type) {
   const ExpireDate = order?.ExpireDate
-
-  return `MerchantID=${MerchantID}`
-    + `&RespondType=${RespondType}`
-    + `&TimeStamp=${order.TimeStamp}`
-    + `&Version=${Version}`
-    + `&MerchantOrderNo=${order.MerchantOrderNo}`
-    + `&Amt=${order.Amt}`
-    + `&ItemDesc=${encodeURIComponent(order.ItemDesc)}`
-    + `&Email=${encodeURIComponent(order.Email)}`
-    + `&NotifyURL=${NotifyURL}`
-    // + `&ReturnURL=${ReturnURL}`
-    + `&ClientBackURL=${ClientBackURL}`
-    + `&ExpireDate=${ExpireDate ? ExpireDate : ''}`;
+  if(type !== 'close') {
+    return `MerchantID=${MerchantID}`
+      + `&RespondType=${RespondType}`
+      + `&TimeStamp=${order.TimeStamp}`
+      + `&Version=${Version}`
+      + `&MerchantOrderNo=${order.MerchantOrderNo}`
+      + `&Amt=${order.Amt}`
+      + `&ItemDesc=${encodeURIComponent(order.ItemDesc)}`
+      + `&Email=${encodeURIComponent(order.Email)}`
+      + `&NotifyURL=${NotifyURL}`
+      // + `&ReturnURL=${ReturnURL}`
+      + `&ClientBackURL=${ClientBackURL}`
+      + `&ExpireDate=${ExpireDate ? ExpireDate : ''}`;
+  } else {
+    return `MerchantID=${MerchantID}`
+      +`RespondType=${RespondType}`
+      + `&TimeStamp=${order.TimeStamp}`
+      + `&Version=${Version}`
+      + `&MerchantOrderNo=${order.MerchantOrderNo}`
+      + `&Amt=${order.Amt}`
+      + `&IndexType=2&CloseType=2`
+      + `&NotifyURL=${NotifyURL}`
+      + `&ClientBackURL=${ClientBackURL}`;
+  }
 }
 
 // 對應文件 P16：使用 aes 加密
 // $edata1=bin2hex(openssl_encrypt($data1, "AES-256-CBC", $key, OPENSSL_RAW_DATA, $iv));
-function create_mpg_aes_encrypt(TradeInfo) {
+function create_mpg_aes_encrypt(TradeInfo, type) {
   const encrypt = crypto.createCipheriv('aes256', HASHKEY, HASHIV);
-  const enc = encrypt.update(genDataChain(TradeInfo), 'utf8', 'hex');
   
+  const enc = encrypt.update(genDataChain(TradeInfo, type), 'utf8', 'hex');
   return enc + encrypt.final('hex');
 }
 
