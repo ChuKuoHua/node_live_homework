@@ -11,12 +11,12 @@ const orders = {}
 router.post('/createOrder', (req, res) => {
   const data = req.body;
   const TimeStamp = Math.round(new Date().getTime() / 1000)
-  const ExpireDate = '2023-05-25'
+  // const ExpireDate = '2023-05-25'
 
   orders[data.MerchantOrderNo] = {
     ...data,
     TimeStamp,
-    ExpireDate
+    // ExpireDate
   };
   const order = orders[data.MerchantOrderNo]
   
@@ -122,7 +122,7 @@ function genDataChain(order, type) {
       + `&Email=${encodeURIComponent(order.Email)}`
       + `&NotifyURL=${NotifyURL}`
       // + `&ReturnURL=${ReturnURL}`
-      + `&ClientBackURL=${ClientBackURL}`
+      + `&ClientBackURL=${ClientBackURL}/order/${order.MerchantOrderNo}`
       + `&ExpireDate=${ExpireDate ? ExpireDate : ''}`;
   } else {
     return `MerchantID=${MerchantID}`
