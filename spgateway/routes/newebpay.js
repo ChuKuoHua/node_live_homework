@@ -11,7 +11,6 @@ const orders = {}
 router.post('/createOrder', (req, res) => {
   const data = req.body;
   const TimeStamp = Math.round(new Date().getTime() / 1000)
-
   orders[data.MerchantOrderNo] = {
     ...data,
     TimeStamp
