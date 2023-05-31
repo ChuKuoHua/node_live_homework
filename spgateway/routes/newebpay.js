@@ -11,12 +11,10 @@ const orders = {}
 router.post('/createOrder', (req, res) => {
   const data = req.body;
   const TimeStamp = Math.round(new Date().getTime() / 1000)
-  const ExpireDate = '2023-05-25'
 
   orders[data.MerchantOrderNo] = {
     ...data,
-    TimeStamp,
-    ExpireDate
+    TimeStamp
   };
   const order = orders[data.MerchantOrderNo]
   
@@ -36,11 +34,8 @@ router.post('/createOrder', (req, res) => {
 
   // 將日期物件轉換為指定格式的字串
   const formattedDate = dateObj.format(outputFormat);
-  console.log(formattedDate)
   const dateObj2 = dayjs(formattedDate, outputFormat);
   const formattedDate2 = dateObj2.format(outputFormat2);
-  
-  console.log(formattedDate2);
 
   return res.json({
     order: orders[data.MerchantOrderNo],
@@ -123,7 +118,8 @@ function genDataChain(order, type) {
       + `&NotifyURL=${NotifyURL}`
       // + `&ReturnURL=${ReturnURL}`
       + `&ClientBackURL=${ClientBackURL}`
-      + `&ExpireDate=${ExpireDate ? ExpireDate : ''}`;
+      + `&ExpireDate=${ExpireDate ? ExpireDate : ''}`
+      + `&WEBATM=1&CVS=1&CREDIT=1`;
   } else {
     return `MerchantID=${MerchantID}`
       +`RespondType=${RespondType}`
