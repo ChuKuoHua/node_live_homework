@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
+  </head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <body>
+    <div id="app">
+      <div id="content" v-for="item in content" :key="item.id">
+        <p>
+          {{ item }}
+        </p>
+      </div>
+      <input type="text" id="input" v-model.trim="message">
+      <button type="button" id="btn" @click="sentMsg()">送出</button>
+    </div>
+
+    <script type="module">
+      import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.37/vue.esm-browser.min.js';
+
+      const ws = new WebSocket('ws://localhost:8080');
+      const app = {
+        data() {
+          return {
+            content: '',
+            
+            message: ''
+          };
+        },
+        methods: {
+          sentMsg() {
+            ws.send(this.message);
+            this.getMsg()
+          },
+          getMsg() {
+            ws.addEventListener("message", (event) => {
+              console.log("Message from server ", JSON.parse(event.data));
+              // 將 WebSocket 傳來的資料轉成陣列，並且將每個元素包在 <p> 內
+              this.content = JSON.parse(event.data);
+            });
+          }
+        },
+        async mounted() {
+          ws.addEventListener("open", (event) => {
+            // ws.send("Hello Server!");
+          });
+          this.getMsg()
+        },
+      };
+
+      createApp(app).mount('#app');
+    </script>
+  </body>
+</html>
