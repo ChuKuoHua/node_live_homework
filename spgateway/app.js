@@ -3,7 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-const newebpayRouter = require('./routes/newebpay');
+const webSocketRouter = require('./routes/webSocket');
 const { resAllError } = require('./middleware/resError');
 const notFound = require('./service/notFound');
 const app = express();
@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/api', newebpayRouter);
+app.use('/api', webSocketRouter);
 
 // 檢查路由
 app.use(notFound);

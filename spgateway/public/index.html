@@ -197,6 +197,8 @@
 
     <script type="module">
       import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.37/vue.esm-browser.min.js';
+      
+      const ws = new WebSocket('ws://localhost:8080');
       const app = {
         data() {
           return {
