@@ -6,15 +6,55 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
   </head>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <style>
+    .contentBox {
+      border: 1px solid;
+      height: 250px;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    .grid {
+      display: grid;
+    }
+    .w-25 {
+      width: 25%;
+    }
+    .w-50 {
+      width: 50%;
+    }
+    .w-100 {
+      width: 100%;
+    }
+    .d-flex {
+      display: flex;
+    }
+  </style>
   <body>
     <div id="app">
-      <div id="content" v-for="item in content" :key="item.id">
-        <p>
-          {{ item }}
-        </p>
+      <div class="w-25 grid">
+        <div class="contentBox">
+          <div v-for="item in content" :key="item.id">
+            <p>
+              {{ item.name }}：{{ item.message }}
+            </p>
+          </div>
+        </div>
+        <div class="d-flex">
+          <input
+            type="text"
+            class="w-25"
+            placeholder="名稱"
+            v-model.trim="name">
+          <input
+            type="text"
+            class="w-50"
+            v-model.trim="message">
+          <button
+            type="button"
+            class="w-25"
+            @click="sentMsg()">送出</button>
+        </div>
       </div>
-      <input type="text" id="input" v-model.trim="message">
-      <button type="button" id="btn" @click="sentMsg()">送出</button>
     </div>
 
     <script type="module">
@@ -24,22 +64,40 @@
       const app = {
         data() {
           return {
+            name: '',
             content: '',
-            
             message: ''
           };
         },
         methods: {
           sentMsg() {
-            ws.send(this.message);
+            ws.send(JSON.stringify({
+              name: this.name,
+              message: this.message
+            }));
+            this.message = ''
             this.getMsg()
           },
           getMsg() {
             ws.addEventListener("message", (event) => {
-              console.log("Message from server ", JSON.parse(event.data));
               // 將 WebSocket 傳來的資料轉成陣列，並且將每個元素包在 <p> 內
-              this.content = JSON.parse(event.data);
+              const data = JSON.parse(event.data);
+              // this.content = JSON.parse(this.content)
+              this.content = data.map(item => JSON.parse(item))
             });
+          }
+        },
+        watch: {
+          message: function () {
+            const scrollTop = document.querySelector('.contentBox').scrollTop
+            const offsetHeight = document.querySelector('.contentBox').offsetHeight
+            const scrollHeight = document.querySelector('.contentBox').scrollHeight
+            // 輸入新訊息時讓捲軸至底
+            // 捲動條位置 + 元素的高度 vs 實際需要捲動的高度(元素內容的高度)
+            console.log(Math.abs(scrollTop + offsetHeight - scrollHeight));
+            if(scrollTop + offsetHeight - scrollHeight <= 10) {
+              document.querySelector('.contentBox').scrollTop = scrollHeight
+            }
           }
         },
         async mounted() {
